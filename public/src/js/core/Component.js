@@ -1,13 +1,15 @@
 export default class Component {
   constructor({ $target, props, name }) {
-    // console.log($target);
-    // console.log(props);
-    // console.log(name);
     this.$target = $target;
     this.props = props;
     this.name = name;
     this.setup();
     this.mount();
+  }
+  init({ $target, props, name }) {
+    this.$target = $target;
+    this.props = props;
+    this.name = name;
   }
   setup() {}
   mount() {
@@ -34,14 +36,11 @@ export default class Component {
     });
   }
   setState(newState) {
+    const { receiveComponentUpdateCall } = this.props;
     this.state = { ...this.state, ...newState };
     if (this.shouldRender()) this.render();
+    receiveComponentUpdateCall(this);
   }
-  setProps(newProps, shouldRender) {
-    this.props = { ...this.props, ...newProps };
-    if (shouldRender) this.render();
-  }
-  updateComponent() {}
   getInheritances() {
     return {};
   }

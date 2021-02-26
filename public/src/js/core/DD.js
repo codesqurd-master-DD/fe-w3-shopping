@@ -25,19 +25,20 @@ export default class DD {
     return {
       [componentName]: {
         component,
-        children: children.map((child) => this.branch(...child)),
+        children: children.reduce((acc, child) => {
+          return { ...acc, ...this.branch(...child) };
+        }, {}),
       },
     };
   }
   combineProps(componentName, newProps) {
     this.inheritances[componentName].props = {
-      ...this.inheritances[componentName]?.props,
+      ...this.inheritances[componentName].props,
       ...newProps,
       ...{
         receiveComponentUpdateCall: this.receiveComponentUpdateCall.bind(this),
       },
     };
-    console.log("3", this.inheritances[componentName]);
   }
   setInheritances(inheritances) {
     this.inheritances = { ...this.inheritances, ...inheritances };
@@ -47,12 +48,41 @@ export default class DD {
   }
   receiveComponentUpdateCall(component) {
     const inheritances = component.getInheritances();
-    const children = getChildrenOfTargetComponent(component);
-    children.forEach((child) => {
-      const { $target, props } = inheritances[child.name];
-      child.setTarget($target);
-      child.setProps(props, true);
-    });
+    for (const inheritance in inheritances) {
+      const { $target, props, name } = inheritances[inheritance];
+      const prevProps = JSON.stringify(this.inheritances[name].props);
+
+      this.combineProps(name, props);
+      this.setTarget(name, $target);
+
+      const nextProps = JSON.stringify(this.inheritances[name].props);
+      const component = this.findComponentInTree(name, this.familyTree);
+      console.log(component);
+      if (this.shouldComponentUpdate(prevProps, nextProps)) {
+        component.init(nextProps);
+      } else {
+      }
+    }
+  }
+  setTarget(componentName, $newTarget) {
+    this.inheritances[componentName].$target = $newTarget;
+  }
+  shouldComponentUpdate(prev, next) {
+    return prev !== next;
+  }
+  findComponentInTree(name, tree) {
+    if (tree[name]) {
+      return tree[name]["component"];
+    }
+    for (const branch in tree) {
+      const result = this.findComponentInTree(name, tree[branch]["children"]);
+      if (result) {
+        return result;
+      }
+    }
+  }
+  isEmptyObject(obj) {
+    return Object.keys(obj).length === 0 && JSON.stringify(obj) === "{}";
   }
   getChildrenOfTargetComponent(targetComponent, tree) {
     if (tree.length === 0) return;
@@ -65,11 +95,4 @@ export default class DD {
       return getChildrenOfTargetComponent(targetComponent, child);
     });
   }
-  findKeyOftargetComponent(component, tree = this.familyTree) {}
-  // findComponentInTree(componentName) {
-  //   let result = {}
-  //   for (const name in this.familyTree) {
-  //     if()
-  //   }
-  // }
 }
