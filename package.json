@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build" : "webpack",
-    "start": "npm run build && node server.js "
+    "watch:scss": "sass --watch public/src/scss",
+    "watch:webpack": "npx webpack",
+    "server:start" : "nodemon server.js",
+    "start": "node tools/start.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   },
   "homepage": "https://github.com/codesqurd-master-DD/fe-w3-shopping#readme",
   "dependencies": {
+    "concurrently": "^6.0.0",
     "express": "^4.17.1"
   },
   "devDependencies": {
