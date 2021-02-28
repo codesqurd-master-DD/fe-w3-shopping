@@ -1,51 +1,51 @@
 export default class Component {
   constructor({ $target, props, name }) {
     this.$target = $target;
-    this.props = props;
     this.name = name;
+    this.$componentBox = document.createElement("div");
     this.setup();
-    this.mount();
+    this.setState(props, false);
+    this.didMount();
   }
-  init({ $target, props, name }) {
+
+  init({ $target, props, name }, isUpdate) {
     this.$target = $target;
-    this.props = props;
     this.name = name;
+    isUpdate ? this.setState(props) : this.render(false);
   }
   setup() {}
-  mount() {
-    this.render();
+  didMount() {
     this.setEvents();
   }
-  shouldRender() {
-    return true;
-  }
-  render() {
-    this.$target.innerHTML = this.getTemplate();
+
+  render(isUpdate = true) {
+    isUpdate ? (this.$componentBox.innerHTML = this.getTemplate()) : null;
+    this.$target.appendChild(this.$componentBox);
   }
   getTemplate() {}
 
   setEvents() {}
   addEvent(eventType, selector, callback) {
-    const children = [...this.$target.querySelectorAll(selector)];
+    const children = [...this.$componentBox.querySelectorAll(selector)];
     const isTarget = (target) => {
       return children.includes(target) || target.closest(selector);
     };
-    this.$target.addEventListener(eventType, (event) => {
+    this.$componentBox.addEventListener(eventType, (event) => {
       if (!isTarget(event.target)) return false;
       callback(event);
     });
   }
-  setState(newState) {
-    const { receiveComponentUpdateCall } = this.props;
+  setState(newState, isUpdate = true) {
     this.state = { ...this.state, ...newState };
-    if (this.shouldRender()) this.render();
-    receiveComponentUpdateCall(this);
+    this.render();
+
+    if (isUpdate) {
+      const { receiveComponentUpdateCall } = this.state;
+      receiveComponentUpdateCall(this);
+    }
   }
   getInheritances() {
     return {};
-  }
-  getInnerHTML() {
-    return this.$target.innerHTML;
   }
   setTarget($target) {
     this.$target = $target;

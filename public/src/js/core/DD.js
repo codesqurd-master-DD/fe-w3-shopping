@@ -57,11 +57,8 @@ export default class DD {
 
       const nextProps = JSON.stringify(this.inheritances[name].props);
       const component = this.findComponentInTree(name, this.familyTree);
-      console.log(component);
-      if (this.shouldComponentUpdate(prevProps, nextProps)) {
-        component.init(nextProps);
-      } else {
-      }
+      const isUpdate = this.shouldComponentUpdate(prevProps, nextProps);
+      component.init({ $target, nextProps, name }, isUpdate);
     }
   }
   setTarget(componentName, $newTarget) {

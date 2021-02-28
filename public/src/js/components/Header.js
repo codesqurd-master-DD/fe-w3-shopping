@@ -1,13 +1,12 @@
 import Component from "../core/Component.js";
 export default class Header extends Component {
   setup() {
-    this.state = { header: "Header" };
-    this.inheritances = {};
+    this.state = { title: "Header" };
   }
   getTemplate() {
     return /*html*/ `
     <div class="header">
-        <h1>${this.state.header}</h1>
+        <h1>${this.state.title}</h1>
         <div class="searchBar"></div>
         <div class="menu"></div>
     </div>
@@ -19,14 +18,17 @@ export default class Header extends Component {
     return {
       searchBar: {
         $target: $searchBar,
-        props: { changeHeader: this.changeHeader.bind(this) },
+        props: {
+          changeTitle: this.changeTitle.bind(this),
+          test2: "change Props",
+        },
         name: "searchBar",
       },
       menu: { $target: $menu, props: {}, name: "menu" },
     };
   }
-  changeHeader(newHeader) {
-    this.setState({ header: newHeader });
+  changeTitle(newTitle) {
+    this.setState({ title: newTitle });
   }
-  static changeHeader
+  static changeHeader;
 }

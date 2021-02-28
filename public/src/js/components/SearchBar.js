@@ -8,10 +8,10 @@ export default class SearchBar extends Component {
     `;
   }
   setEvents() {
-    const { changeHeader } = this.props;
+    const { changeTitle } = this.state;
     this.addEvent("keyup", ".searchBox", ({ key, target }) => {
       if (key !== "Enter") return;
-      changeHeader(target.value);
+      changeTitle(target.value);
     });
   }
 }
