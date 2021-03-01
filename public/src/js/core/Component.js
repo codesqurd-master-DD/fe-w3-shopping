@@ -3,12 +3,14 @@ export default class Component {
     this.$target = $target;
     this.name = name;
     this.$componentBox = document.createElement("div");
-    this.setup();
-    this.setState(props, false);
-    this.didMount();
+    this.init(props);
   }
-
-  init({ $target, props, name }, isUpdate) {
+  async init(props) {
+    await this.setup();
+    await this.setState(props, false);
+    await this.didMount();
+  }
+  update({ $target, props, name }, isUpdate) {
     this.$target = $target;
     this.name = name;
     isUpdate ? this.setState(props) : this.render(false);

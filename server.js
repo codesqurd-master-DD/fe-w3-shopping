@@ -6,24 +6,22 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const PUBLIC_DIR = path.join(__dirname, "public");
 
-
 app.use(express.static(PUBLIC_DIR));
 
 app.get("/", (req, res) => {
   const indexHTML = path.join(PUBLIC_DIR, "index.html");
   res.sendFile(indexHTML);
 });
-
-app.get("/server_img/banner/:bannerId", (req, res) => {
-  const bannerId = req.params.bannerId;
-  const filePath = path.join(PUBLIC_DIR, `/server_img/banner/${bannerId}.png`);
-  res.sendFile(filePath);
-  // res.send(`<img src='/server_img/banner/${bannerId}.png' alt="none">`);
+app.get("/server_img/carousel", (req, res) => {
+  const images = [1, 2, 3].map(
+    (el) => `/server_img/carousel/carousel_${el}.png`
+  );
+  res.send(images);
 });
 
-app.get("/server_img/hotItem/:itemId", (req, res) => {
+app.get("/server_img/carousel/:itemId", (req, res) => {
   const itemId = req.params.itemId;
-  res.send(`<img src='/server_img/banner/${itemId}.png'>`);
+  res.send(`<img src='/server_img/carousel/${itemId}.png'>`);
 });
 
 app.listen(PORT, () => {

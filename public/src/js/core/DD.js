@@ -17,7 +17,7 @@ export default class DD {
   renderComponenets($component, $target) {
     $target.appendChild($component.$target);
   }
-  branch(componentName, Constructor, props, ...children) {
+  branch({ componentName, Constructor, props }, ...children) {
     this.combineProps(componentName, props);
     const component = new Constructor(this.getInheritances(componentName));
     const inheritances = component.getInheritances();
@@ -58,7 +58,7 @@ export default class DD {
       const nextProps = JSON.stringify(this.inheritances[name].props);
       const component = this.findComponentInTree(name, this.familyTree);
       const isUpdate = this.shouldComponentUpdate(prevProps, nextProps);
-      component.init({ $target, nextProps, name }, isUpdate);
+      component.update({ $target, nextProps, name }, isUpdate);
     }
   }
   setTarget(componentName, $newTarget) {

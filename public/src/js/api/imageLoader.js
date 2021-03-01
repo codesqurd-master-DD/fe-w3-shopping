@@ -2,15 +2,15 @@ const request = (url, option = {}) => {
   return fetch(url)
     .then((res) => {
       if (!res.ok) return new Error(res.status);
-      return res;
+      return res.json().then((data) => data);
     })
     .catch((err) => console.error(err));
 };
 
-export const getBannerImage = (bannerId) => {
-  return request(`/server_img/banner/${bannerId}.png`);
+export const getCarouselImages = () => {
+  return request("/server_img/carousel");
 };
 
 export const getHotItemImage = (itemId) => {
-  return request(`/server_img/hotItem/${itemId}.jfif`);
+  return request(`/server_img/carousel/${itemId}`);
 };
