@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://fe-w3-shopping/./public/src/scss/style.scss"],"names":[],"mappings":"AAAA;EACE;EACA;AACF,C","file":"css/style.bundle.css","sourcesContent":[".app {\r\n  background: tan;\r\n  height: 50px;\r\n}\r\n"],"sourceRoot":""}
